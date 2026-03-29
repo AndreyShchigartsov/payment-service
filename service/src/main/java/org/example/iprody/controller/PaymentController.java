@@ -24,47 +24,40 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/payments")
 @RequiredArgsConstructor
-public class PaymentController {
+public class PaymentController implements PaymentControllerDoc {
 
     private final PaymentService paymentService;
 
-    // Create
     @PostMapping
     public ResponseEntity<PaymentResponse> createPayment(@RequestBody PaymentRequest request) {
         return new ResponseEntity<>(paymentService.createPayment(request), HttpStatus.CREATED);
     }
 
-    // Read - by id
     @GetMapping("/{id}")
     public ResponseEntity<PaymentResponse> getPayment(@PathVariable UUID id) {
         return ResponseEntity.ok(paymentService.getPayment(id));
     }
 
-    // Read - by payment number
     @GetMapping("/number/{paymentNumber}")
     public ResponseEntity<PaymentResponse> getPaymentByNumber(@PathVariable String paymentNumber) {
         return ResponseEntity.ok(paymentService.getPaymentByNumber(paymentNumber));
     }
 
-    // Read - by order id
     @GetMapping("/order/{orderId}")
     public ResponseEntity<List<PaymentResponse>> getPaymentsByOrder(@PathVariable String orderId) {
         return ResponseEntity.ok(paymentService.getPaymentsByOrder(orderId));
     }
 
-    // Read - all
     @GetMapping
     public ResponseEntity<List<PaymentResponse>> getAllPayments() {
         return ResponseEntity.ok(paymentService.getAllPayments());
     }
 
-    // Read - by status
     @GetMapping("/status/{status}")
     public ResponseEntity<List<PaymentResponse>> getPaymentsByStatus(@PathVariable PaymentStatus status) {
         return ResponseEntity.ok(paymentService.getPaymentsByStatus(status));
     }
 
-    // Read - statistics
     @GetMapping("/stats/count/{status}")
     public ResponseEntity<Long> getPaymentCountByStatus(@PathVariable PaymentStatus status) {
         return ResponseEntity.ok(paymentService.getPaymentCountByStatus(status));
@@ -75,21 +68,18 @@ public class PaymentController {
         return ResponseEntity.ok(paymentService.getTotalRevenue());
     }
 
-    // Update - full update
     @PutMapping("/{id}")
     public ResponseEntity<PaymentResponse> updatePayment(@PathVariable UUID id,
                                                          @RequestBody PaymentRequest request) {
         return ResponseEntity.ok(paymentService.updatePayment(id, request));
     }
 
-    // Update - status only
     @PatchMapping("/{id}/status")
     public ResponseEntity<PaymentResponse> updatePaymentStatus(@PathVariable UUID id,
                                                                @RequestBody PaymentStatusUpdateRequest request) {
         return ResponseEntity.ok(paymentService.updatePaymentStatus(id, request));
     }
 
-    // Delete
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePayment(@PathVariable UUID id) {
         paymentService.deletePayment(id);
